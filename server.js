@@ -17,21 +17,19 @@ app.use(morganFreeman("dev"));
 app.use(express.static("public"));
 app.use(express.json());
 
-app.post("*", (req, res, next) =>
-  res
-    .status(403)
-    .json({ error: true, mensaje: "Te pensabas que podías jaquearme" })
-);
-app.put("*", (req, res, next) =>
-  res
-    .status(403)
-    .json({ error: true, mensaje: "Te pensabas que podías jaquearme" })
-);
-app.delete("*", (req, res, next) =>
-  res
-    .status(403)
-    .json({ error: true, mensaje: "Te pensabas que podías jaquearme" })
-);
+app.use((req, res, next) => {
+  if (
+    req.method === "PUT" ||
+    req.method === "POST" ||
+    req.method === "DELETE"
+  ) {
+    res
+      .status(403)
+      .json({ error: true, mensaje: "Te pensabas que podías jaquearme" });
+  } else {
+    next();
+  }
+});
 
 app.get("/metro/lineas", async (req, res, next) => {
   lineasMetro = await obtenerLineas();
